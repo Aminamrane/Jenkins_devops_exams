@@ -44,7 +44,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat $KUBECONFIG_CONTENT > .kube/config
+                    chmod 600 .kube/config
+                    export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-dev.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-dev.yaml
                     sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-dev.yaml
@@ -63,7 +65,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat $KUBECONFIG_CONTENT > .kube/config
+                    chmod 600 .kube/config
+                    export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-qa.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-qa.yaml
                     sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-qa.yaml
@@ -82,7 +86,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat $KUBECONFIG_CONTENT > .kube/config
+                    chmod 600 .kube/config
+                    export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-staging.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-staging.yaml
                     sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-staging.yaml
@@ -107,7 +113,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat $KUBECONFIG_CONTENT > .kube/config
+                    chmod 600 .kube/config
+                    export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-prod.yaml
                     sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-prod.yaml
                     sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-prod.yaml
