@@ -44,7 +44,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat << 'EOF' > .kube/config
+                    $KUBECONFIG_CONTENT
+                    EOF
                     chmod 600 .kube/config
                     export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-dev.yaml
@@ -65,7 +67,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat << 'EOF' > .kube/config
+                    $KUBECONFIG_CONTENT
+                    EOF
                     chmod 600 .kube/config
                     export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-qa.yaml
@@ -86,7 +90,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat << 'EOF' > .kube/config
+                    $KUBECONFIG_CONTENT
+                    EOF
                     chmod 600 .kube/config
                     export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-staging.yaml
@@ -113,7 +119,9 @@ pipeline {
                     sh '''
                     rm -rf .kube
                     mkdir -p .kube
-                    echo "$KUBECONFIG_CONTENT" > .kube/config
+                    cat << 'EOF' > .kube/config
+                    $KUBECONFIG_CONTENT
+                    EOF
                     chmod 600 .kube/config
                     export KUBECONFIG=$(pwd)/.kube/config
                     cp charts/values.yaml values-prod.yaml
