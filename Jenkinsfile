@@ -52,18 +52,13 @@ pipeline {
         stage('Deploy to QA') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG_CONTENT')]) {
-                        sh '''
-                        mkdir -p ~/.kube
-                        echo "$KUBECONFIG_CONTENT" > ~/.kube/config
-                        chmod 600 ~/.kube/config
-                        export KUBECONFIG=~/.kube/config
-                        cp charts/values.yaml values-qa.yaml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-qa.yaml
-                        sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-qa.yaml
-                        helm upgrade --install movie-cast-app charts --values=values-qa.yaml --namespace qa
-                        '''
-                    }
+                    sh '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    cp charts/values.yaml values-qa.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-qa.yaml
+                    sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-qa.yaml
+                    helm upgrade --install movie-cast-app charts --values=values-qa.yaml --namespace qa
+                    '''
                 }
             }
         }
@@ -71,18 +66,13 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG_CONTENT')]) {
-                        sh '''
-                        mkdir -p ~/.kube
-                        echo "$KUBECONFIG_CONTENT" > ~/.kube/config
-                        chmod 600 ~/.kube/config
-                        export KUBECONFIG=~/.kube/config
-                        cp charts/values.yaml values-staging.yaml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-staging.yaml
-                        sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-staging.yaml
-                        helm upgrade --install movie-cast-app charts --values=values-staging.yaml --namespace staging
-                        '''
-                    }
+                    sh '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    cp charts/values.yaml values-staging.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-staging.yaml
+                    sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-staging.yaml
+                    helm upgrade --install movie-cast-app charts --values=values-staging.yaml --namespace staging
+                    '''
                 }
             }
         }
@@ -96,18 +86,13 @@ pipeline {
                     input message: 'Do you want to deploy to production?', ok: 'Yes'
                 }
                 script {
-                    withCredentials([string(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG_CONTENT')]) {
-                        sh '''
-                        mkdir -p ~/.kube
-                        echo "$KUBECONFIG_CONTENT" > ~/.kube/config
-                        chmod 600 ~/.kube/config
-                        export KUBECONFIG=~/.kube/config
-                        cp charts/values.yaml values-prod.yaml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-prod.yaml
-                        sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-prod.yaml
-                        helm upgrade --install movie-cast-app charts --values=values-prod.yaml --namespace prod
-                        '''
-                    }
+                    sh '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    cp charts/values.yaml values-prod.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-prod.yaml
+                    sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-prod.yaml
+                    helm upgrade --install movie-cast-app charts --values=values-prod.yaml --namespace prod
+                    '''
                 }
             }
         }
