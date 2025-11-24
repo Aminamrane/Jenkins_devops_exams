@@ -38,18 +38,13 @@ pipeline {
         stage('Deploy to Dev') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG_CONTENT')]) {
-                        sh '''
-                        mkdir -p ~/.kube
-                        echo "$KUBECONFIG_CONTENT" > ~/.kube/config
-                        chmod 600 ~/.kube/config
-                        export KUBECONFIG=~/.kube/config
-                        cp charts/values.yaml values-dev.yaml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-dev.yaml
-                        sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-dev.yaml
-                        helm upgrade --install movie-cast-app charts --values=values-dev.yaml --namespace dev
-                        '''
-                    }
+                    sh '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    cp charts/values.yaml values-dev.yaml
+                    sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values-dev.yaml
+                    sed -i "s+repository.*+repository: ${DOCKER_ID}/${MOVIE_IMAGE}+g" values-dev.yaml
+                    helm upgrade --install movie-cast-app charts --values=values-dev.yaml --namespace dev
+                    '''
                 }
             }
         }
